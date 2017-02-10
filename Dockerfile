@@ -20,7 +20,7 @@ ENV HADOOP_VERSION 2.7
 RUN mkdir /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} && \
     curl http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
     | tar --strip-components=1 -xzC /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} && \
-    rm /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/lib/spark-examples-*.jar
+    rm -fr /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/examples
 
 #Add hadoop s3 support
 RUN curl "https://search.maven.org/remotecontent?filepath=org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar" \
