@@ -14,7 +14,7 @@ RUN apt-get remove -y --auto-remove openjdk* && \
 # Update the base ubuntu image with dependencies needed for Spark
 RUN apt-get install -y python libnss3 curl unzip
 
-ENV SPARK_VERSION 2.1
+ENV SPARK_VERSION 2.1.0
 ENV HADOOP_VERSION 2.7
 
 RUN mkdir /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} && \
