@@ -14,11 +14,20 @@ RUN apt-get remove -y --auto-remove openjdk* && \
 # Update the base ubuntu image with dependencies needed for Spark
 RUN apt-get install -y python libnss3 curl unzip
 
-RUN mkdir /usr/lib/spark-1.6.3-bin-hadoop2.6 && \
-    curl http://archive.apache.org/dist/spark/spark-1.6.3/spark-1.6.3-bin-hadoop2.6.tgz \
-    | tar --strip-components=1 -xzC /usr/lib/spark-1.6.3-bin-hadoop2.6 && \
-    rm /usr/lib/spark-1.6.3-bin-hadoop2.6/lib/spark-examples-*.jar
+ENV SPARK_VERSION 2.1
+ENV HADOOP_VERSION 2.7
 
-ENV SPARK_HOME /usr/lib/spark-1.6.3-bin-hadoop2.6
-ENV PATH $PATH:/usr/lib/spark-1.6.3-bin-hadoop2.6/bin
+RUN mkdir /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} && \
+    curl http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+    | tar --strip-components=1 -xzC /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} && \
+    rm /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/lib/spark-examples-*.jar
+
+#Add hadoop s3 support
+RUN curl "https://search.maven.org/remotecontent?filepath=org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar" \
+    -o /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/jars/hadoop-aws-2.7.3.jar && \
+    curl "https://search.maven.org/remotecontent?filepath=com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar" \
+    -o /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/jars/aws-java-sdk-1.7.4.jar
+
+ENV SPARK_HOME /usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
+ENV PATH $PATH:/usr/lib/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/bin
 ENV MESOS_NATIVE_JAVA_LIBRARY /usr/local/lib/libmesos.so
